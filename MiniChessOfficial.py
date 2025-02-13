@@ -9,7 +9,7 @@ class MiniChess:
         self.current_game_state = self.init_board()  # Initializing the game with the starting board 
         self.turns_since_capture = 0   # Tracking the moves since last cpature to check for draws                   
         self.previous_piece_count = self.count_pieces()  # Storing the initial count of pieces
-        self.moves_number = 1  # Track the turn number
+        self.moves_number = 0  # Track the turn number
         self.trace_file = open("gameTrace.txt", "w")  # Opening the trace file for writing the moves
 
     # Initialize board
