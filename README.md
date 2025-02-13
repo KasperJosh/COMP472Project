@@ -1,8 +1,8 @@
-# COMP472Project
+# Mini Chess COMP472 Project
 MiniChess Project for COMP472 Artificial Intelligence 
 
 
-### Mini Chess
+### Description
 
 Mini Chess is a 2-player game, inspired by the game of chess, played with the white pieces and the black pieces on a 5×5 board. Each player (white/black pieces) has 6 pieces on the board. 
 These pieces are: 
