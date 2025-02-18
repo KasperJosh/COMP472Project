@@ -36,12 +36,12 @@ class MiniChess:
 
     # Check if move is valid for the current game state
     def is_valid_move(self, game_state, move):  
-        start = move[0]  # Starting position of the move
-        end = move[1]  # Ending position of the move
-        start_row, start_col = start 
-        end_row, end_col = end 
+        start = move[0]  # Starting position of the move # (3,1) B2
+        end = move[1]  # Ending position of the move # (2,1) B3
+        start_row, start_col = start  #(3,1)
+        end_row, end_col = end  #(2,1)
         board = game_state["board"] 
-        turn = game_state["turn"] 
+        turn = game_state["turn"] #white
         
         # Check if start and end positions are within the board boundaries
         if not (0 <= start_row < 5 and 0 <= start_col < 5):
@@ -49,28 +49,28 @@ class MiniChess:
         if not (0 <= end_row < 5 and 0 <= end_col < 5):
             return False 
 
-        piece = board[start_row][start_col]    # Initializing the piece being moved
-        target_piece = board[end_row][end_col]  # Initializing the piece at the target position
+        piece = board[start_row][start_col]    # Initializing the piece being moved # "wp"
+        target_piece = board[end_row][end_col]  # Initializing the piece at the target position #"."
 
         # Ensure the piece belongs to the current player's turn
         if (turn == 'white' and piece[0] != 'w') or (turn == 'black' and piece[0] != 'b'):
             return False
 
         # Ensure the target position is not occupied by the same player's piece
-        if target_piece != '.' and target_piece[0] == piece[0]:
+        if target_piece != '.' and target_piece[0] == piece[0]:   #w and w
             return False
 
         # pieceType is either K, Q, B, N, p
-        piece_type = piece[1]
+        piece_type = piece[1]  #p
 
         # Implementing all the movement rules for each piece type
-        if piece_type == 'K':  # King
+        if piece_type == 'K':  
             return abs(start_row - end_row) <= 1 and abs(start_col - end_col) <= 1  #Moving one square in any direction
         elif piece_type == 'Q':  # Queen
-            if start_row == end_row or start_col == end_col or abs(start_row - end_row) == abs(start_col - end_col): 
+            if start_row == end_row or start_col == end_col or abs(start_row - end_row) == abs(start_col - end_col): #Straight and diagonally
                 return self.is_path_clear(game_state, move)  #Moving in a straight line and the path must be clear
         elif piece_type == 'B':  # Bishop
-            if abs(start_row - end_row) == abs(start_col - end_col):
+            if abs(start_row - end_row) == abs(start_col - end_col): #Diagonally
                 return self.is_path_clear(game_state, move)  #Moving diagonally and the path must be clear
         elif piece_type == 'N':  # Knight
             return (abs(start_row - end_row), abs(start_col - end_col)) in [(2, 1), (1, 2)]  #Moving in L shape
@@ -80,11 +80,11 @@ class MiniChess:
             else:  # Black pawn
                 direction = 1  # Moves downward
 
-            # Normal forward move
+            # Normal forward move, making sure that the pawn stays in the same column, but can move a row
             if end_col == start_col and end_row == start_row + direction and target_piece == '.':
                 return True
             # Capturing a piece diagonally
-            if abs(end_col - start_col) == 1 and end_row == start_row + direction and target_piece != '.' and target_piece[0] != piece[0]:
+            if abs(end_col - start_col) == 1 and end_row == start_row + direction and target_piece != '.' and target_piece[0] != piece[0]: #w and w
                 return True
         else:
             return False
@@ -113,7 +113,7 @@ class MiniChess:
         else:
             col_step = -1   # Moving left      
 
-        # Starting to check from the next square in the path
+        # Starting to check from the next square in the path one square at a time
         row, col = start_row + row_step, start_col + col_step   
 
         #Iterate through the path until reaching the destination
@@ -129,9 +129,9 @@ class MiniChess:
     def valid_moves(self, game_state):
         moves = []   #List that stores the valid moves                  
         board = game_state["board"]    
-        turn = game_state["turn"]      
+        turn = game_state["turn"]   #white   
 
-        #Iterate through each each on the board to check the pieces
+        #Iterate through each piece on the board to check the pieces
         for row in range(5):  
             for col in range(5):   
                 piece = board[row][col]
@@ -141,11 +141,11 @@ class MiniChess:
                     continue
                 # Ensure the piece belongs to the current player
                 if (turn == 'white' and piece[0] == 'w') or (turn == 'black' and piece[0] == 'b'):
-                    # Checking all of the possible destinations for the piece
+                    # Checking all of the possible destinations for the piece again row by row and column by column
                     for r in range(5):
                         for c in range(5):
-                            move = ((row, col), (r, c))
-                            if self.is_valid_move(game_state, move):
+                            move = ((row, col), (r, c)) #Starting position and Ending position
+                            if self.is_valid_move(game_state, move): #If it's a valid move then append move
                                 moves.append(move)
 
         return moves
@@ -188,7 +188,7 @@ class MiniChess:
         # Log the action to the trace file
         self.log_action(game_state, move)
 
-        # updating the draw counter if no capture occured
+        # Updating the draw counter if no capture occured
         current_piece_count = self.count_pieces()
         if current_piece_count < self.previous_piece_count:  # A piece was captured
             self.turns_since_capture = 0  # Reset draw counter
@@ -203,7 +203,7 @@ class MiniChess:
         else:
             game_state["turn"] = "white"
         
-        self.moves_number += 1  # Increment the turn number
+        self.moves_number += 1  # Increment the moves number
         
         return game_state
     
